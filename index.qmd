@@ -1,0 +1,25 @@
+---
+title: "dataviz"
+page-layout: full
+title-block-banner: true
+from: markdown+emoji
+listing:
+  contents: 
+    - 30DayMapChallenge
+    - TidyTuesday
+  fields: [image, title, subtitle]
+  sort: "date desc"
+  type: grid
+  grid-columns: 1
+  image-height: 100%
+  categories: unnumbered
+  sort-ui: false
+  filter-ui: false
+---
+
+Hi :wave: 
+
+Here are a selected few charts and maps from my learning journey in data visualization and mapping. I have some Python experience, but are trying to learn and improve both R and some dataviz-skills along the way...
+
+---
+

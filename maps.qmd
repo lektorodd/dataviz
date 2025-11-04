@@ -1,0 +1,17 @@
+---
+title: "\\#30DayMapChallenge"
+listing:
+  contents: 30DayMapChallenge
+  fields: ["title", "subtitle", "date", "author", "image"]
+  image-align: left
+  feed: true
+  sort: "date desc"
+  type: default
+  categories: true
+  sort-ui: false
+  filter-ui: false
+page-layout: full
+title-block-banner: true
+---
+
+My contributions for the #30DayMapChallenge. 

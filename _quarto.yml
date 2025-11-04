@@ -1,0 +1,32 @@
+project:
+  type: website
+
+execute:
+  freeze: auto
+
+website:
+  description: "A blog built with Quarto"
+  site-url: https://lektorodd.github.io/dataviz
+  title: "lektorodd | dataviz"
+  favicon: favicon.png
+  navbar:
+    right:
+      - maps.qmd
+      - tidytuesday.qmd
+      - icon: github
+        href: https://github.com/
+      - icon: bluesky
+        href: https://bsky.app/
+      - icon: linkedin
+        href: https://www.linkedin.com/
+      - icon: person-circle
+        href: https://lektorodd.no/
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    css: styles.css
+
+
+

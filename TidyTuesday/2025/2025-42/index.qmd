@@ -1,0 +1,134 @@
+---
+title: "Week 42 - Historic UK Meteorological & Climate Data"
+subtitle: "\\#TidyTuesday"
+author: "Torodd F. Ottestad"
+date: "2025-10-21"
+categories: [R, code, chart, 2025]
+from: markdown+emoji
+# image: "TT-2025-42.png"
+draft: true
+---
+
+First attempt on a #TidyTuesday dataviz. This week the data are [historic UK meteorological and climate data from the UK Met Office](https://github.com/rfordatascience/tidytuesday/tree/main/data/2025/2025-10-21). As a resident in western Norway I am obliged to make some plot about rain ☔️...
+
+<!-- ![](TT-2025-42.png){width=75% fig-align="center"} -->
+
+```{r libraries, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(tidytuesdayR)
+```
+
+```{r data, warning=FALSE, message=FALSE}
+tuesdata <- tidytuesdayR::tt_load(2025, week = 42)
+
+historic_station_met <- tuesdata$historic_station_met
+station_meta <- tuesdata$station_meta
+```
+
+## Exploration
+
+Want to make a simple plot of location of the stations from the station_metadata
+
+```{r exploration, warning=FALSE, message=FALSE}
+glimpse(station_meta)
+```
+
+Trying to see the spread of the stations opened before 1925, so that there will be 100 years of data (1924-2024). 
+
+```{r plot-1, fig.width=8, fig.height=6, dpi=300, dev='png'}
+old_stations <- station_meta |> 
+    filter(opened < 1925)
+
+ggplot(station_meta) +
+    geom_point(aes(x = lng, y = lat), color = "blue", size = 1) +
+    geom_point(data=old_stations, aes(x = lng, y = lat), color = "red", size = 1) +
+    coord_fixed() +
+    labs(title = "UK Meteorological Stations opened before 1925",
+         x = "Longitude",
+         y = "Latitude")
+```
+
+They seem to be fairly evenly spread across the UK.
+
+Names of the 10 stations, in a table from oldest to newest: 
+
+```{r table-1}
+old_stations |> 
+    select(station_name, opened) |>
+    arrange(opened) |>
+    knitr::kable()
+```
+
+## Wrangling
+
+- There are 10 stations opened before 1925. 
+- Maybe a time series annual for all of them, and then facet them by station? 
+- one line per year (x - month, y - percepitation). Maybe highlight the 1924 and 2024 lines? (gghighlight?)
+
+```{r wrangling, warning=FALSE, message=FALSE}
+old_station_ids <- old_stations$station
+
+old_station_data <- historic_station_met |> 
+    filter(station %in% old_station_ids, year >= 1924) |> 
+    left_join(old_stations |> select(station, station_name), by="station")
+
+glimpse(old_station_data)
+```
+
+finne snittdata
+
+```{r}
+# calculate average per month per station in the period. 
+average_station_data <- old_station_data |> 
+    group_by(station, station_name, month) |> 
+    summarise(avg_rain = mean(rain, na.rm=TRUE)) |> 
+    ungroup()
+
+average_station_data
+```
+
+## Plotting
+
+
+
+```{r plot-3, fig.width=10, fig.height=8, dpi=300, dev='png'}
+# plot average line per station
+ggplot(average_station_data) +
+    geom_line(aes(x = month, y = avg_rain, group = station_name, color=station_name), size = 1) +
+    scale_x_continuous(breaks = 1:12, labels = month.abb) +
+    scale_y_continuous(limits = c(0, NA)) +
+    #facet_wrap(~station_name, ncol=5) +
+    labs(title = "Average Monthly Precipitation at UK Meteorological Stations opened before 1925",
+         x = "Month",
+         y = "Precipitation (mm)") +
+    theme(
+        panel.grid = element_blank(),
+        panel.background = element_rect(fill = "white"),
+        plot.background = element_rect(fill = "white"),
+    )
+
+```
+
+
+```{r plot-2, fig.width=10, fig.height=8, dpi=300, dev='png'}
+ggplot(old_station_data) +
+    geom_line(aes(x = month, y = rain, group = year, color = year), alpha = 0.1) +
+    #geom_line(data = old_station_data |> filter(year == 1924), 
+    #          aes(x = month, y = rain), color = "blue", size = 1) +
+    #geom_line(data = old_station_data |> filter(year == 2024), 
+    #          aes(x = month, y = rain), color = "red", size = 1    ) +
+    scale_x_continuous(breaks = 1:12, labels = month.abb) +
+    scale_y_continuous(limits = c(0, NA)) +
+    facet_wrap(~station_name, ncol=5) +
+    labs(title = "Monthly Precipitation at UK Meteorological Stations opened before 1925",
+         subtitle = "Grey lines are years 1925-2023, blue is 1924, red is 2024",
+         x = "Month",
+         y = "Precipitation (mm)") +
+    theme(
+        panel.grid = element_blank(),
+        panel.background = element_rect(fill = "white"),
+        plot.background = element_rect(fill = "white"),
+    )
+```
+
+    
