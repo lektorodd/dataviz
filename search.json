@@ -14,6 +14,62 @@
     "text": "Add some text\nHere I will try to use the cowplot library to add some text to the plot.\n\ntitle = \"Lyderhorn\"\nsubtitle = \"396 moh\"\n\nfont_add_google(\"JetBrains Mono\", \"jbmono\")\nfont_add_google(\"Source Sans 3\", \"sourcesans\")\nshowtext_auto()\nshowtext_opts(dpi = 300)\n\ntitle_font &lt;- \"jbmono\"\nbody_font &lt;- \"sourcesans\"\n\n# title\np &lt;- ggdraw(p) +\n  draw_label(\n    title,\n    x = 0.94, y = 0.85,\n    hjust = 1, vjust = 1,\n    color = \"grey30\", size = 42, fontfamily = title_font, fontface = \"bold\"\n  ) +\n  draw_label(\n    subtitle,\n    x = 0.94, y = 0.75,\n    hjust = 1, vjust = 1,\n    color = \"salmon\", size = 24, fontfamily = title_font, fontface= \"bold\"\n  )\n\nprint(p)\n\n\n\n\n\n\n\n\n\n# Create a curved arrow grob\nørnafjellet &lt;- curveGrob(\n  x1 = 0.4, y1 = 0.6,\n  x2 = 0.265, y2 = 0.545,\n  curvature = 0.2,\n  arrow = arrow(length = unit(0.3, \"cm\"), type = \"open\"),\n  gp = gpar(col = \"gray20\", lwd = 1.75)\n)\n\nskjenafjellet &lt;- curveGrob(\n  x1 = 0.4, y1 = 0.4,\n  x2 = 0.225, y2 = 0.49,\n  curvature = -0.2,\n  arrow = arrow(length = unit(0.3, \"cm\"), type = \"open\"),\n  gp = gpar(col = \"gray25\", lwd = 1.75)\n)\n\np &lt;- ggdraw(p) +\n  draw_grob(ørnafjellet) + \n  draw_grob(skjenafjellet) +\n  draw_label(\n    \"Ørnafjellet\",\n    x = 0.42, y = 0.60,\n    hjust = 0, vjust = 0.5,\n    color = \"gray25\", size = 12, fontfamily = title_font\n  ) +\n  draw_label(\n    \"Skjenafjellet\",\n    x = 0.42, y = 0.40,\n    hjust = 0, vjust = 0.5,\n    color = \"gray25\", size = 11, fontfamily = title_font\n  ) + \n  draw_label(\n    \"Bergen, known for its seven mountains, has Lyderhorn \\nas one of its iconic peaks. Contour lines made using \\nelevation data from a DEM, with major contours for every \\n100 meters and minor contours for every 10 meters. The \\npeak at 396 meters is highlighted in salmon color.\",\n    x = 0.93, y = 0.265,\n    hjust = 1, vjust = 1,\n    color = \"gray25\", size = 11, fontfamily = body_font\n  ) +\n  draw_label(\n    \"Data: Høydedata/Kartverket | Graphics: @lektorodd \\n#30DayMapChallenge | Day 3: Polygons\",\n    x = 0.93, y = 0.02,\n    hjust = 1, vjust = 0,\n    color = \"gray30\", size = 6, fontfamily = title_font\n  )\nprint(p)"
   },
   {
+    "objectID": "30DayMapChallenge/2025/2025-4-mydata/index.html",
+    "href": "30DayMapChallenge/2025/2025-4-mydata/index.html",
+    "title": "Day 4 - My data",
+    "section": "",
+    "text": "Some of my own data for today’s map. Trying to map some of my runs in April this year."
+  },
+  {
+    "objectID": "30DayMapChallenge/2025/2025-4-mydata/index.html#basemap-and-setup",
+    "href": "30DayMapChallenge/2025/2025-4-mydata/index.html#basemap-and-setup",
+    "title": "Day 4 - My data",
+    "section": "Basemap and setup",
+    "text": "Basemap and setup\n\n# Masemap ---------------------------------\n# Load data for map -----------------------\nbergen &lt;- st_read_parquet(here(\"data/Kommuner.parquet\")) |&gt;\n    filter(navn %in% c(\"Bergen\", \"Askøy\", \"Øygarden\")) |&gt;\n    st_set_crs(25833) |&gt;\n    st_transform(4326)\n\n# Fonts and colors ------------------------\nfont_add_google(\"Source Sans 3\", \"sourcesans\")\nfont_add_google(\"Bebas Neue\", \"bebas\")\nfont_add_google(\"JetBrains Mono\", \"jbmono\")\nshowtext_auto()\nshowtext_opts(dpi = 300)\n\nland_farge = \"#f5f5f2\"\nsjø_farge = \"#eaf8ff\"\ngrense_farge = \"#8a8a8a\"\nstasjon_farge = \"#0091D5\"\nlinje_farge = \"#ff6b6b\"\nutheving_farge = \"#4a4a4a\"\n\nbasekart &lt;- ggplot() +\n  geom_sf(data = bergen, fill = land_farge, color = grense_farge, size = 0.17)"
+  },
+  {
+    "objectID": "30DayMapChallenge/2025/2025-4-mydata/index.html#read-files-and-combine",
+    "href": "30DayMapChallenge/2025/2025-4-mydata/index.html#read-files-and-combine",
+    "title": "Day 4 - My data",
+    "section": "Read files and combine",
+    "text": "Read files and combine\n\n# filenames\nfilene &lt;-  list.files(here(\"data/strava\"), pattern = \"\\\\.gpx$\", full.names = TRUE)\n\n\n# read files and combine them\nsporene &lt;- lapply(filene, function(fil) {\n  # read track points\n  spor &lt;- st_read(fil, layer = \"track_points\", quiet = TRUE)\n  # add file names\n  spor$fil &lt;- basename(fil)\n  spor\n})\n\n# combine to a sf object\nspor_sf &lt;- do.call(rbind, sporene)\n\n\nCalculate total\n\n# Calculate km for the displayed routes\nbbox &lt;- st_bbox(c(xmin = 5.0, ymin = 60.2, xmax = 5.35, ymax = 60.41), crs = st_crs(4326))\n\n# lines displayed in the map\nspor_i_kart &lt;-  st_crop(spor_sf, bbox)\n\n# combine points to lines\nspor_linjer &lt;- spor_i_kart |&gt;\n  group_by(fil) |&gt;\n  summarise(do_union = FALSE) |&gt;\n  st_cast(\"LINESTRING\")\n\n# calculate total length in km\ntotal_km &lt;- sum(st_length(spor_linjer)) / 1000"
+  },
+  {
+    "objectID": "30DayMapChallenge/2025/2025-4-mydata/index.html#add-roads",
+    "href": "30DayMapChallenge/2025/2025-4-mydata/index.html#add-roads",
+    "title": "Day 4 - My data",
+    "section": "Add roads",
+    "text": "Add roads\nTrying OSM road for the first time.\n\n# Get roads from OSM\nroads &lt;- opq(bbox = bbox) |&gt;\n  add_osm_feature(key = \"highway\", \n                  value = c(\"motorway\", \"trunk\", \"primary\", \"secondary\", \"tertiary\")) |&gt;\n  osmdata_sf()\n\n# Extract the lines\nroads_lines &lt;- roads$osm_lines"
+  },
+  {
+    "objectID": "30DayMapChallenge/2025/2025-4-mydata/index.html#plotting",
+    "href": "30DayMapChallenge/2025/2025-4-mydata/index.html#plotting",
+    "title": "Day 4 - My data",
+    "section": "Plotting",
+    "text": "Plotting\n\n# tekst\ntittel &lt;- \"april running\"\nsubtittel &lt;- paste0(\"A selection of my running tracks from April 2025. Tracks from the inlaws home (much) further south) had to be excluded due to serious ratio-issues. The tracks on the map represent a total of &lt;span style='color:#ff6a00;'&gt;**\", round(total_km, 1), \" km**&lt;/span&gt;. More intense color indicates more overlap.\")\ncaption &lt;- \"**Data:** Garmin/Strava | **Grafikk:** @lektorodd &lt;br&gt;#30DayMapChallenge | Day 4: My Data\"\n\n\n# plotting\nplott &lt;- basekart +\n    geom_sf(data = roads_lines, color = \"#d0d0d0\", size = 0.3, alpha = 0.6) +\n    geom_sf(data = spor_linjer, color = \"#ff6a00ff\", size = 0.8, alpha = 0.4) +\n    coord_sf(xlim = c(5.0, 5.35), ylim = c(60.2, 60.41)) +\n    scale_color_viridis_c(\"inferno\") +\n    labs(\n        title = tittel,\n        subtitle = subtittel,\n        caption = caption\n    ) +\n    theme(\n        panel.background = element_rect(fill = sjø_farge),\n        plot.background = element_rect(fill = sjø_farge, color = NA),\n        legend.position = \"none\",\n        plot.title = element_text(\n            family = \"bebas\",\n            face = \"bold\",\n            size = 24,\n            hjust = 0.5,\n            margin = margin(b = 20, t=20)\n        ),\n        plot.subtitle = element_textbox_simple(\n            family = \"sourcesans\",\n            size = 10,\n            hjust = -1,\n            margin = margin(b = 20, l = 10, r = 10)\n        ),\n        plot.caption = element_markdown(\n            family = \"sourcesans\",\n            size = 8,\n            hjust = 0.5,\n            lineheight = 1.1,\n            margin = margin(t = 4, b = 4)\n        ),\n        axis.title = element_blank(),\n        axis.text = element_blank(),\n        axis.ticks = element_blank(),\n        panel.grid = element_blank(),\n        plot.margin = margin(t=0, r=0, b=0, l=0)\n    )\n\nplott"
+  },
+  {
+    "objectID": "maps.html",
+    "href": "maps.html",
+    "title": "#30DayMapChallenge",
+    "section": "",
+    "text": "My contributions for the #30DayMapChallenge.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDay 4 - My data\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\nNov 4, 2025\n\n\nTorodd F. Ottestad\n\n\n\n\n\n\n\n\n\n\n\n\nDay 3 - Polygons\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\nNov 3, 2025\n\n\nTorodd F. Ottestad\n\n\n\n\n\n\n\n\n\n\n\n\nDay 2 - Lines\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\nNov 2, 2025\n\n\nTorodd F. Ottestad\n\n\n\n\n\n\n\n\n\n\n\n\nDay 1 - Points\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\nNov 1, 2025\n\n\nTorodd F. Ottestad\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "dataviz",
+    "section": "",
+    "text": "Hi 👋\nHere are a selected few charts and maps from my learning journey in data visualization and mapping. I have some Python experience, but are trying to learn and improve both R and some dataviz-skills along the way…\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDay 4 - My data\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\n\n\n\n\n\n\n\nDay 3 - Polygons\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\n\n\n\n\n\n\n\nDay 2 - Lines\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\n\n\n\n\n\n\n\nDay 1 - Points\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "tidytuesday.html",
+    "href": "tidytuesday.html",
+    "title": "#TidyTuesday",
+    "section": "",
+    "text": "No matching items"
+  },
+  {
     "objectID": "30DayMapChallenge/2025/2025-2-lines/index.html",
     "href": "30DayMapChallenge/2025/2025-2-lines/index.html",
     "title": "Day 2 - Lines",
@@ -47,27 +103,6 @@
     "title": "Day 2 - Lines",
     "section": "Plotting",
     "text": "Plotting\nFirst I will plot a basemap, then gradually build a plot on top of that.\n\nBasemap\n\nbasekart &lt;- ggplot() +\n    geom_sf(data = bergen, fill = land_farge, color = NA) +\n    coord_sf(xlim = xlim_vals, ylim = ylim_vals) +\n    theme(\n        plot.title = element_text(\n            family = title_font,\n            size = 32,\n            face = \"bold\",\n            hjust = 0.5,\n            margin = margin(b = 15)\n        ),\n        plot.subtitle = element_textbox_simple(\n            family = body_font,\n            size = 12,\n            halign = 0.5,\n            margin = margin(b = 10),\n        ),\n        legend.text = element_text(\n            family = body_font,\n            size = 9\n        ),\n        legend.position = \"bottom\",\n        legend.key = element_blank(),\n        panel.background = element_rect(fill = sjø_farge),\n        panel.grid = element_blank(),\n        axis.title = element_blank(),\n        axis.text = element_blank(),\n        axis.ticks = element_blank()\n    )\n\nbasekart\n\n\n\n\n\n\n\n\n\n\nAdding lines\n\nplott &lt;- basekart + \n  geom_segment(\n    data = filter(turar_par_koord, n_turar &gt; 9),\n    aes(x = lon_1, y = lat_1, xend = lon_2, yend = lat_2),\n    color = linje_farge,\n    linewidth = 0.15,\n    alpha = 0.6,\n  )\n\nplott\n\n\n\n\n\n\n\n\n\n\nHighlight top lines\n\nplott &lt;- plott +\n  geom_segment(\n    data = topp_turar,\n    aes(x = lon_1, y = lat_1, xend = lon_2, yend = lat_2),\n    color = utheving_farge,\n    linewidth = 0.7,\n    lineend = \"round\"\n  )\n\nplott &lt;- plott +\n  geom_point(\n    data = topp_stasjoner,\n    aes(x = longitude, y = latitude),\n    color = utheving_farge,\n    size = 0.8,\n    alpha = 1\n  )\n\nplott\n\n\n\n\n\n\n\n\n\n\nFinalize plot with titles and caption\n\nplott &lt;- plott +\n  annotate(\n    \"text\",\n    x = 5.445,\n    y = 60.415,\n    label = tittel,\n    family = title_font,\n    size = 12,\n    fontface = \"bold\",\n    hjust = 1,\n  ) + \n  annotate(\n    \"text\",\n    x = 5.445,\n    y = 60.411,\n    family = body_font,\n    size = 5,\n    hjust = 1,\n    vjust = 1,\n    label = subtittel,\n  ) \n\nplott &lt;- plott +\n  annotate(\n    \"text\",\n    x = 5.265,\n    y = 60.365,\n    color = utheving_farge,\n    label = topp_ruter_tekst,\n    family = title_font,\n    size = 2.7,\n    hjust = 0,\n    vjust = 1,\n    lineheight = 1.2,\n  )\n\nplott &lt;- plott +\n  labs(\n    caption = caption\n  ) + \n  theme(\n    plot.caption = element_markdown(\n      family = body_font,\n      size = 10,\n      hjust = 0.5,\n      lineheight = 1.1,\n      margin = margin(t = 10))\n  )\n\nplott"
-  },
-  {
-    "objectID": "tidytuesday.html",
-    "href": "tidytuesday.html",
-    "title": "#TidyTuesday",
-    "section": "",
-    "text": "No matching items"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "dataviz",
-    "section": "",
-    "text": "Hi 👋\nHere are a selected few charts and maps from my learning journey in data visualization and mapping. I have some Python experience, but are trying to learn and improve both R and some dataviz-skills along the way…\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDay 3 - Polygons\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\n\n\n\n\n\n\n\nDay 2 - Lines\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\n\n\n\n\n\n\n\nDay 1 - Points\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "maps.html",
-    "href": "maps.html",
-    "title": "#30DayMapChallenge",
-    "section": "",
-    "text": "My contributions for the #30DayMapChallenge.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDay 3 - Polygons\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\nNov 3, 2025\n\n\nTorodd F. Ottestad\n\n\n\n\n\n\n\n\n\n\n\n\nDay 2 - Lines\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\nNov 2, 2025\n\n\nTorodd F. Ottestad\n\n\n\n\n\n\n\n\n\n\n\n\nDay 1 - Points\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\nNov 1, 2025\n\n\nTorodd F. Ottestad\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "30DayMapChallenge/2025/2025-1-points/index.html",
