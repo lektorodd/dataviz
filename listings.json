@@ -1,0 +1,22 @@
+[
+  {
+    "listing": "/tidytuesday.html",
+    "items": []
+  },
+  {
+    "listing": "/index.html",
+    "items": [
+      "/30DayMapChallenge/2025/2025-3-polygons/index.html",
+      "/30DayMapChallenge/2025/2025-2-lines/index.html",
+      "/30DayMapChallenge/2025/2025-1-points/index.html"
+    ]
+  },
+  {
+    "listing": "/maps.html",
+    "items": [
+      "/30DayMapChallenge/2025/2025-3-polygons/index.html",
+      "/30DayMapChallenge/2025/2025-2-lines/index.html",
+      "/30DayMapChallenge/2025/2025-1-points/index.html"
+    ]
+  }
+]
