@@ -49,27 +49,6 @@
     "text": "Plotting\n\n# tekst\ntittel &lt;- \"april running\"\nsubtittel &lt;- paste0(\"A selection of my running tracks from April 2025. Tracks from the inlaws home (much) further south) had to be excluded due to serious ratio-issues. The tracks on the map represent a total of &lt;span style='color:#ff6a00;'&gt;**\", round(total_km, 1), \" km**&lt;/span&gt;. More intense color indicates more overlap.\")\ncaption &lt;- \"**Data:** Garmin/Strava | **Grafikk:** @lektorodd &lt;br&gt;#30DayMapChallenge | Day 4: My Data\"\n\n\n# plotting\nplott &lt;- basekart +\n    geom_sf(data = roads_lines, color = \"#d0d0d0\", size = 0.3, alpha = 0.6) +\n    geom_sf(data = spor_linjer, color = \"#ff6a00ff\", size = 0.8, alpha = 0.4) +\n    coord_sf(xlim = c(5.0, 5.35), ylim = c(60.2, 60.41)) +\n    scale_color_viridis_c(\"inferno\") +\n    labs(\n        title = tittel,\n        subtitle = subtittel,\n        caption = caption\n    ) +\n    theme(\n        panel.background = element_rect(fill = sjø_farge),\n        plot.background = element_rect(fill = sjø_farge, color = NA),\n        legend.position = \"none\",\n        plot.title = element_text(\n            family = \"bebas\",\n            face = \"bold\",\n            size = 24,\n            hjust = 0.5,\n            margin = margin(b = 20, t=20)\n        ),\n        plot.subtitle = element_textbox_simple(\n            family = \"sourcesans\",\n            size = 10,\n            hjust = -1,\n            margin = margin(b = 20, l = 10, r = 10)\n        ),\n        plot.caption = element_markdown(\n            family = \"sourcesans\",\n            size = 8,\n            hjust = 0.5,\n            lineheight = 1.1,\n            margin = margin(t = 4, b = 4)\n        ),\n        axis.title = element_blank(),\n        axis.text = element_blank(),\n        axis.ticks = element_blank(),\n        panel.grid = element_blank(),\n        plot.margin = margin(t=0, r=0, b=0, l=0)\n    )\n\nplott"
   },
   {
-    "objectID": "maps.html",
-    "href": "maps.html",
-    "title": "#30DayMapChallenge",
-    "section": "",
-    "text": "My contributions for the #30DayMapChallenge.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDay 4 - My data\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\nNov 4, 2025\n\n\nTorodd F. Ottestad\n\n\n\n\n\n\n\n\n\n\n\n\nDay 3 - Polygons\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\nNov 3, 2025\n\n\nTorodd F. Ottestad\n\n\n\n\n\n\n\n\n\n\n\n\nDay 2 - Lines\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\nNov 2, 2025\n\n\nTorodd F. Ottestad\n\n\n\n\n\n\n\n\n\n\n\n\nDay 1 - Points\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\nNov 1, 2025\n\n\nTorodd F. Ottestad\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "dataviz",
-    "section": "",
-    "text": "Hi 👋\nHere are a selected few charts and maps from my learning journey in data visualization and mapping. I have some Python experience, but are trying to learn and improve both R and some dataviz-skills along the way…\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDay 4 - My data\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\n\n\n\n\n\n\n\nDay 3 - Polygons\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\n\n\n\n\n\n\n\nDay 2 - Lines\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\n\n\n\n\n\n\n\nDay 1 - Points\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "tidytuesday.html",
-    "href": "tidytuesday.html",
-    "title": "#TidyTuesday",
-    "section": "",
-    "text": "No matching items"
-  },
-  {
     "objectID": "30DayMapChallenge/2025/2025-2-lines/index.html",
     "href": "30DayMapChallenge/2025/2025-2-lines/index.html",
     "title": "Day 2 - Lines",
@@ -103,6 +82,48 @@
     "title": "Day 2 - Lines",
     "section": "Plotting",
     "text": "Plotting\nFirst I will plot a basemap, then gradually build a plot on top of that.\n\nBasemap\n\nbasekart &lt;- ggplot() +\n    geom_sf(data = bergen, fill = land_farge, color = NA) +\n    coord_sf(xlim = xlim_vals, ylim = ylim_vals) +\n    theme(\n        plot.title = element_text(\n            family = title_font,\n            size = 32,\n            face = \"bold\",\n            hjust = 0.5,\n            margin = margin(b = 15)\n        ),\n        plot.subtitle = element_textbox_simple(\n            family = body_font,\n            size = 12,\n            halign = 0.5,\n            margin = margin(b = 10),\n        ),\n        legend.text = element_text(\n            family = body_font,\n            size = 9\n        ),\n        legend.position = \"bottom\",\n        legend.key = element_blank(),\n        panel.background = element_rect(fill = sjø_farge),\n        panel.grid = element_blank(),\n        axis.title = element_blank(),\n        axis.text = element_blank(),\n        axis.ticks = element_blank()\n    )\n\nbasekart\n\n\n\n\n\n\n\n\n\n\nAdding lines\n\nplott &lt;- basekart + \n  geom_segment(\n    data = filter(turar_par_koord, n_turar &gt; 9),\n    aes(x = lon_1, y = lat_1, xend = lon_2, yend = lat_2),\n    color = linje_farge,\n    linewidth = 0.15,\n    alpha = 0.6,\n  )\n\nplott\n\n\n\n\n\n\n\n\n\n\nHighlight top lines\n\nplott &lt;- plott +\n  geom_segment(\n    data = topp_turar,\n    aes(x = lon_1, y = lat_1, xend = lon_2, yend = lat_2),\n    color = utheving_farge,\n    linewidth = 0.7,\n    lineend = \"round\"\n  )\n\nplott &lt;- plott +\n  geom_point(\n    data = topp_stasjoner,\n    aes(x = longitude, y = latitude),\n    color = utheving_farge,\n    size = 0.8,\n    alpha = 1\n  )\n\nplott\n\n\n\n\n\n\n\n\n\n\nFinalize plot with titles and caption\n\nplott &lt;- plott +\n  annotate(\n    \"text\",\n    x = 5.445,\n    y = 60.415,\n    label = tittel,\n    family = title_font,\n    size = 12,\n    fontface = \"bold\",\n    hjust = 1,\n  ) + \n  annotate(\n    \"text\",\n    x = 5.445,\n    y = 60.411,\n    family = body_font,\n    size = 5,\n    hjust = 1,\n    vjust = 1,\n    label = subtittel,\n  ) \n\nplott &lt;- plott +\n  annotate(\n    \"text\",\n    x = 5.265,\n    y = 60.365,\n    color = utheving_farge,\n    label = topp_ruter_tekst,\n    family = title_font,\n    size = 2.7,\n    hjust = 0,\n    vjust = 1,\n    lineheight = 1.2,\n  )\n\nplott &lt;- plott +\n  labs(\n    caption = caption\n  ) + \n  theme(\n    plot.caption = element_markdown(\n      family = body_font,\n      size = 10,\n      hjust = 0.5,\n      lineheight = 1.1,\n      margin = margin(t = 10))\n  )\n\nplott"
+  },
+  {
+    "objectID": "tidytuesday.html",
+    "href": "tidytuesday.html",
+    "title": "#TidyTuesday",
+    "section": "",
+    "text": "No matching items"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "dataviz",
+    "section": "",
+    "text": "Hi 👋\nHere are a selected few charts and maps from my learning journey in data visualization and mapping. I have some Python experience, but are trying to learn and improve both R and some dataviz-skills along the way…\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDay 5 - Earth\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\n\n\n\n\n\n\n\nDay 4 - My data\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\n\n\n\n\n\n\n\nDay 3 - Polygons\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\n\n\n\n\n\n\n\nDay 2 - Lines\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\n\n\n\n\n\n\n\nDay 1 - Points\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "maps.html",
+    "href": "maps.html",
+    "title": "#30DayMapChallenge",
+    "section": "",
+    "text": "My contributions for the #30DayMapChallenge.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDay 5 - Earth\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\nNov 5, 2025\n\n\nTorodd F. Ottestad\n\n\n\n\n\n\n\n\n\n\n\n\nDay 4 - My data\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\nNov 4, 2025\n\n\nTorodd F. Ottestad\n\n\n\n\n\n\n\n\n\n\n\n\nDay 3 - Polygons\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\nNov 3, 2025\n\n\nTorodd F. Ottestad\n\n\n\n\n\n\n\n\n\n\n\n\nDay 2 - Lines\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\nNov 2, 2025\n\n\nTorodd F. Ottestad\n\n\n\n\n\n\n\n\n\n\n\n\nDay 1 - Points\n\n\n#30DayMapChallenge 2025\n\n\n\n\n\nNov 1, 2025\n\n\nTorodd F. Ottestad\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "30DayMapChallenge/2025/2025-5-earth/index.html",
+    "href": "30DayMapChallenge/2025/2025-5-earth/index.html",
+    "title": "Day 5 - Earth",
+    "section": "",
+    "text": "Trying some geological data today."
+  },
+  {
+    "objectID": "30DayMapChallenge/2025/2025-5-earth/index.html#data",
+    "href": "30DayMapChallenge/2025/2025-5-earth/index.html#data",
+    "title": "Day 5 - Earth",
+    "section": "Data",
+    "text": "Data\n\nbergen &lt;- st_read_parquet(here(\"data\", \"Kommuner.parquet\"))|&gt;\n    filter(navn %in% c(\"Bergen\", \"Askøy\", \"Øygarden\", \"Bjørnafjorden\")) |&gt;\n    st_set_crs(25833) |&gt;\n    st_transform(4326)\n\n\n# lines\nmg_data &lt;- st_read(here(\"data\", \"geologi\", \"MarinGrense\", \"MarinGrense_20240123.shp\")) |&gt; \n  st_transform(4326)\n\nReading layer `MarinGrense_20240123' from data source \n  `/Users/torodd/GitHub/dataviz/data/geologi/MarinGrense/MarinGrense_20240123.shp' \n  using driver `ESRI Shapefile'\nSimple feature collection with 47370 features and 5 fields\nGeometry type: MULTILINESTRING\nDimension:     XY\nBounding box:  xmin: -86899.94 ymin: 6439782 xmax: 1130125 ymax: 7950261\nProjected CRS: ETRS89 / UTM zone 33N\n\ncoast &lt;- readRDS(here(\"data\", \"osm\", \"coastline_bergen.rds\"))\nwater &lt;- readRDS(here(\"data\", \"osm\", \"water_bergen.rds\"))\nmajor_streets &lt;- readRDS(here(\"data\", \"osm\", \"major_streets_bergen.rds\"))\nminor_streets &lt;- readRDS(here(\"data\", \"osm\", \"minor_streets_bergen.rds\"))\n\nbbox_area &lt;- st_bbox(c(xmin=5.20, ymin=60.32, xmax=5.42, ymax=60.415), crs = st_crs(4326))"
+  },
+  {
+    "objectID": "30DayMapChallenge/2025/2025-5-earth/index.html#map",
+    "href": "30DayMapChallenge/2025/2025-5-earth/index.html#map",
+    "title": "Day 5 - Earth",
+    "section": "Map",
+    "text": "Map\n\n# color\nsea_color &lt;- \"#B8D4E8\"\nland_color &lt;- \"#F4F1DE\"\nwater_color &lt;- \"#7FB3D5\"\nroad_major_color &lt;- \"#848484ff\"\nroad_minor_color &lt;- \"#373636ff\"\nhighlight_color &lt;- \"#D1495Bff\"\n\n# text\ntitle &lt;- \"Marine Limit\"\nsubtitle &lt;-  \"During the glacial period, the weight of the ice sheets depressed the Earth's crust into the mantle. In the thousands of years since the melting of the ice, the land has continuously risen. The marine limit marks the highest level reached by the sea after the last ice age, around 10,000 years ago.\"\ncaption &lt;- \"**Data:** NGU/OSM | **Grafikk:** @lektorodd &lt;br&gt;#30DayMapChallenge | Day 5: Earth\"\n\n# fonts\nfont_add_google(\"Source Sans 3\", \"sourcesans\")\nfont_add_google(\"Bebas Neue\", \"bebas\")\nshowtext_auto()\nshowtext_opts(dpi = 300)\n\n\n\nmap_plot &lt;- ggplot() + \n  geom_sf(data = bergen, fill = land_color, color = NA) +\n  geom_sf(data = water$osm_polygons, fill = water_color, color = NA, size = 0.1) +\n  geom_sf(data = water$osm_multipolygons, fill = water_color, color = NA, size = 0.1) + \n  geom_sf(data = major_streets$osm_lines, color = road_major_color, size = 0.3, alpha = 0.5) +\n  geom_sf(data = minor_streets$osm_lines, color = road_minor_color, size = 0.1, alpha = 0.5) +\n  geom_sf(data = mg_data, color = highlight_color) +\n  coord_sf(xlim = c(bbox_area$xmin, bbox_area$xmax), ylim = c(bbox_area$ymin, bbox_area$ymax)) +\n  labs(\n    title = title,\n    subtitle = subtitle,\n    caption = caption\n  ) +\n  theme(\n    panel.background = element_rect(fill = sea_color),\n    plot.background = element_rect(fill = sea_color),\n    panel.grid = element_blank(),\n    axis.title = element_blank(),\n    axis.text = element_blank(),\n    axis.ticks = element_blank(),\n    plot.margin = margin(0, 15, 0, 15),\n    plot.title = element_text(\n      family = \"bebas\",\n      size = 32,\n      face = \"bold\",\n      color = highlight_color,\n      hjust = 0.5,\n      margin = margin(b = 10, t = 10)\n    ),\n    plot.subtitle = element_textbox_simple(\n      family = \"sourcesans\",\n      size =,\n      color = \"#333333\",\n      hjust = 0.5,\n      margin = margin(b = 10, l = 15, r = 15)\n    ),\n    plot.caption = element_markdown(\n            family = \"sourcesans\",\n            size = 8,\n            hjust = 0.5,\n            lineheight = 1.1,\n            margin = margin(t = 4, b = 4)\n        )\n  )\n\nmap_plot"
   },
   {
     "objectID": "30DayMapChallenge/2025/2025-1-points/index.html",
